@@ -1,0 +1,85 @@
+%{
+  cc: 4,
+  elapsed_ms: 15052,
+  id: ["exp(0)", "-max(32)", "-min(16)", "-cc(4)", "+bp"],
+  index: 0,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:45:26.361767],
+  stop_at: ~T[14:45:41.413741],
+  sync: true,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 8,
+  elapsed_ms: 15034,
+  id: ["exp(1)", "-max(32)", "-min(16)", "-cc(8)", "+bp"],
+  index: 1,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:45:41.428820],
+  stop_at: ~T[14:45:56.462323],
+  sync: true,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 16,
+  elapsed_ms: 15047,
+  id: ["exp(2)", "-max(32)", "-min(16)", "-cc(16)", "+bp"],
+  index: 2,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:45:56.463618],
+  stop_at: ~T[14:46:11.510125],
+  sync: true,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 32,
+  elapsed_ms: 15039,
+  id: ["exp(3)", "-max(32)", "-min(16)", "-cc(32)", "+bp"],
+  index: 3,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:46:11.510399],
+  stop_at: ~T[14:46:26.549979],
+  sync: true,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 64,
+  elapsed_ms: 15217,
+  id: ["exp(4)", "-max(32)", "-min(16)", "-cc(64)", "+bp"],
+  index: 4,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:46:26.550172],
+  stop_at: ~T[14:46:41.767045],
+  sync: true,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+Statistics: %Statistex{
+  average: 15077.8,
+  frequency_distribution: %{
+    15034 => 1,
+    15039 => 1,
+    15047 => 1,
+    15052 => 1,
+    15217 => 1
+  },
+  maximum: 15217,
+  median: 15047.0,
+  minimum: 15034,
+  mode: nil,
+  percentiles: %{25 => 15036.5, 50 => 15047.0, 75 => 15134.5},
+  sample_size: 5,
+  standard_deviation: 78.12617999108878,
+  standard_deviation_ratio: 0.0051815370936800316,
+  total: 75389,
+  variance: 6103.7
+}

@@ -1,0 +1,66 @@
+%{
+  cc: 16,
+  elapsed_ms: 15056,
+  id: ["exp(0)", "-max(32)", "-min(16)", "-cc(16)"],
+  index: 0,
+  max_demand: 32,
+  min_demand: 16,
+  start_at: ~T[14:26:39.438299],
+  stop_at: ~T[14:26:54.494620],
+  sync: false,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 16,
+  elapsed_ms: 15067,
+  id: ["exp(1)", "-max(64)", "-min(32)", "-cc(16)"],
+  index: 1,
+  max_demand: 64,
+  min_demand: 32,
+  start_at: ~T[14:26:54.515487],
+  stop_at: ~T[14:27:09.582743],
+  sync: false,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 16,
+  elapsed_ms: 15652,
+  id: ["exp(2)", "-max(640)", "-min(320)", "-cc(16)"],
+  index: 2,
+  max_demand: 640,
+  min_demand: 320,
+  start_at: ~T[14:27:09.583059],
+  stop_at: ~T[14:27:25.235799],
+  sync: false,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+%{
+  cc: 16,
+  elapsed_ms: 18027,
+  id: ["exp(3)", "-max(2500)", "-min(1000)", "-cc(16)"],
+  index: 3,
+  max_demand: 2500,
+  min_demand: 1000,
+  start_at: ~T[14:27:25.236470],
+  stop_at: ~T[14:27:43.263881],
+  sync: false,
+  wait_receiver: 2,
+  wait_transformer: 1
+}
+Statistics: %Statistex{
+  average: 15950.5,
+  frequency_distribution: %{15056 => 1, 15067 => 1, 15652 => 1, 18027 => 1},
+  maximum: 18027,
+  median: 15359.5,
+  minimum: 15056,
+  mode: nil,
+  percentiles: %{25 => 15058.75, 50 => 15359.5, 75 => 17433.25},
+  sample_size: 4,
+  standard_deviation: 1412.0501643591374,
+  standard_deviation_ratio: 0.08852701572735258,
+  total: 63802,
+  variance: 1993885.6666666667
+}

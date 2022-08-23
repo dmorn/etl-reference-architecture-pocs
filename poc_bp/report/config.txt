@@ -1,0 +1,91 @@
+%{
+  cc: 2,
+  elapsed_ms: 27917,
+  id: ["exp(0)", "-max(200)", "-min(100)", "-cc(2)", "+bp"],
+  index: 0,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:25:02.778630],
+  stop_at: ~T[17:25:30.695720],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 4,
+  elapsed_ms: 14701,
+  id: ["exp(1)", "-max(200)", "-min(100)", "-cc(4)", "+bp"],
+  index: 1,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:25:30.700051],
+  stop_at: ~T[17:25:45.401654],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 8,
+  elapsed_ms: 11103,
+  id: ["exp(2)", "-max(200)", "-min(100)", "-cc(8)", "+bp"],
+  index: 2,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:25:45.402549],
+  stop_at: ~T[17:25:56.505595],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 16,
+  elapsed_ms: 11106,
+  id: ["exp(3)", "-max(200)", "-min(100)", "-cc(16)", "+bp"],
+  index: 3,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:25:56.506247],
+  stop_at: ~T[17:26:07.612501],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 32,
+  elapsed_ms: 11103,
+  id: ["exp(4)", "-max(200)", "-min(100)", "-cc(32)", "+bp"],
+  index: 4,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:26:07.613067],
+  stop_at: ~T[17:26:18.716731],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 64,
+  elapsed_ms: 11103,
+  id: ["exp(5)", "-max(200)", "-min(100)", "-cc(64)", "+bp"],
+  index: 5,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:26:18.717278],
+  stop_at: ~T[17:26:29.820700],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}
+%{
+  cc: 128,
+  elapsed_ms: 11127,
+  id: ["exp(6)", "-max(200)", "-min(100)", "-cc(128)", "+bp"],
+  index: 6,
+  max_demand: 200,
+  min_demand: 100,
+  start_at: ~T[17:26:29.821395],
+  stop_at: ~T[17:26:40.948502],
+  sync: true,
+  wait_receiver: 1,
+  wait_transformer: 10
+}

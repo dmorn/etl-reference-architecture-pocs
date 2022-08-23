@@ -1,0 +1,7 @@
+27917,exp(0)-max(200)-min(100)-cc(2)+bp
+14701,exp(1)-max(200)-min(100)-cc(4)+bp
+11103,exp(2)-max(200)-min(100)-cc(8)+bp
+11106,exp(3)-max(200)-min(100)-cc(16)+bp
+11103,exp(4)-max(200)-min(100)-cc(32)+bp
+11103,exp(5)-max(200)-min(100)-cc(64)+bp
+11127,exp(6)-max(200)-min(100)-cc(128)+bp

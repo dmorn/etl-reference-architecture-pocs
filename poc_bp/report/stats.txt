@@ -1,0 +1,20 @@
+%Statistex{
+  average: 14022.857142857143,
+  frequency_distribution: %{
+    11103 => 3,
+    11106 => 1,
+    11127 => 1,
+    14701 => 1,
+    27917 => 1
+  },
+  maximum: 27917,
+  median: 11106.0,
+  minimum: 11103,
+  mode: 11103,
+  percentiles: %{25 => 11103.0, 50 => 11106.0, 75 => 14701.0},
+  sample_size: 7,
+  standard_deviation: 6271.334584934094,
+  standard_deviation_ratio: 0.44722231147655517,
+  total: 98160,
+  variance: 39329637.476190485
+}
