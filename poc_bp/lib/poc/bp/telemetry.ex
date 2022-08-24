@@ -76,7 +76,7 @@ defmodule POC.BP.Telemetry do
     state
   end
 
-  defp make_report(:buffer, dir) do
+  def make_report(:buffer, dir) do
     path = Path.join(dir, "buffer.csv")
     output_path = Path.join(dir, "buffer.html")
 
@@ -107,9 +107,9 @@ defmodule POC.BP.Telemetry do
     |> Vl.Export.save!(output_path)
   end
 
-  defp make_report(:timing, dir) do
+  def make_report(:timing, dir, output_ext \\ ".html") do
     path = Path.join(dir, "timing.csv")
-    output_path = Path.join(dir, "timing.html")
+    output_path = Path.join(dir, "timing" <> output_ext)
 
     data =
       path

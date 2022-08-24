@@ -68,65 +68,26 @@ File.mkdir_p(base_dir)
 
 config_dev = File.open!(Path.join([base_dir, "config.txt"]), [:append])
 
+experiments =
+  Range.new(1, 9)
+  |> Enum.map(fn x -> 2 ** x end)
+  |> Enum.flat_map(fn max_demand ->
+    Range.new(6, 64)
+    |> Enum.filter(fn x -> rem(x, 2) == 0 end)
+    |> Enum.map(fn cc ->
+      %{
+        max_demand: max_demand,
+        min_demand: trunc(max_demand / 2),
+        wait_receiver: 1,
+        wait_transformer: 10,
+        sync: true,
+        cc: cc
+      }
+    end)
+  end)
+
 results =
-  [
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 2
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 4
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 8
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 16
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 32
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 64
-    },
-    %{
-      max_demand: 200,
-      min_demand: 100,
-      wait_receiver: 1,
-      wait_transformer: 10,
-      sync: true,
-      cc: 128
-    },
-  ]
+  experiments
   |> Stream.with_index()
   |> Stream.map(fn {x, index} -> Map.merge(x, %{index: index}) end)
   |> Stream.map(fn config ->
