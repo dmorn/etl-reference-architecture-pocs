@@ -69,11 +69,10 @@ File.mkdir_p(base_dir)
 config_dev = File.open!(Path.join([base_dir, "config.txt"]), [:append])
 
 experiments =
-  Range.new(1, 9)
+  Range.new(1, 10)
   |> Enum.map(fn x -> 2 ** x end)
   |> Enum.flat_map(fn max_demand ->
-    Range.new(6, 64)
-    |> Enum.filter(fn x -> rem(x, 2) == 0 end)
+    [2, 4, 6, 8, 10, 16, 22, 28, 40, 80, 160, 320, 640, 1080]
     |> Enum.map(fn cc ->
       %{
         max_demand: max_demand,

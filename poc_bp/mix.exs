@@ -14,7 +14,7 @@ defmodule POC.BP.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :crypto],
       mod: {POC.BP.Application, []}
     ]
   end
@@ -27,7 +27,8 @@ defmodule POC.BP.MixProject do
       {:vega_lite, "~> 0.1"},
       {:jason, "~> 1.3"},
       {:nimble_csv, "~> 1.1"},
-      {:statistex, "~> 1.0"}
+      {:statistex, "~> 1.0"},
+      {:benchee, "~> 1.1"}
     ]
   end
 end
