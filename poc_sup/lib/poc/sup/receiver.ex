@@ -6,25 +6,25 @@ defmodule POC.SUP.Receiver do
   end
 
   @impl true
-  def init(%{checkpoint_agent: agent, id: id}) do
+  def init(args = %{checkpoint_agent: agent, id: id}) do
     Process.flag(:trap_exit, true)
     POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{module: __MODULE__, id: id})
 
-    seen = %{} = Agent.get(agent, fn state -> state end)
+    seen = Agent.get(agent, fn state -> state end)
+    state = Map.merge(args, %{seen: seen})
 
-    {:consumer, %{agent: agent, seen: seen, id: id},
-     subscribe_to: [POC.SUP.Miner, max_demand: 20, min_demand: 10]}
+    {:consumer, state}
   end
 
   @impl true
   def handle_events(events, _from, state = %{seen: seen, id: id}) do
     events =
       events
-      |> Enum.filter(fn x -> !Map.has_key?(seen, x.index) end)
+      |> Enum.filter(fn x -> !Map.has_key?(seen, x.sample) end)
 
     seen =
       Enum.reduce(events, seen, fn x, seen ->
-        Map.put(seen, x.index, nil)
+        Map.put(seen, x.sample, nil)
       end)
 
     POC.SUP.Telemetry.execute(:buffer, %{count: length(events)}, %{id: id})
@@ -33,7 +33,10 @@ defmodule POC.SUP.Receiver do
   end
 
   @impl true
-  def terminate(reason, state = %{agent: agent, seen: seen, id: id}) do
+  def terminate(reason, state) do
+    %{checkpoint_agent: agent, seen: seen, parent: parent, report_dir: dir, ref: ref, id: id} =
+      state
+
     Agent.update(agent, fn _state -> seen end)
 
     POC.SUP.Telemetry.execute(:stage, %{state: :down}, %{
@@ -41,6 +44,17 @@ defmodule POC.SUP.Receiver do
       id: id,
       reason: reason
     })
+
+    if reason == {:shutdown, :eof} do
+      send(
+        parent,
+        {:done, ref,
+         %{
+           seen_count: map_size(seen),
+           report_dir: dir
+         }}
+      )
+    end
 
     {:shutdown, state}
   end

@@ -1,31 +1,25 @@
 defmodule POC.SUP.Supervisor do
   use Supervisor
-  require Logger
 
-  def start_link([]) do
-    t = :erlang.convert_time_unit(:erlang.system_time(), :native, :millisecond)
-    id = "poc-#{t}"
-    start_link(id)
-  end
-
-  def start_link(id) when is_binary(id) do
-    Supervisor.start_link(__MODULE__, %{id: id})
+  def start_link(opts) do
+    Supervisor.start_link(__MODULE__, opts)
   end
 
   @impl true
-  def init(%{id: id}) do
+  def init(args) do
+    %{id: id} = args
     report_dir = Path.join(["report", id])
-    Logger.info(id: id, report_dir: report_dir)
 
     {:ok, _telemetry} = POC.SUP.Telemetry.init(%{base_dir: report_dir})
     {:ok, agent} = Agent.start_link(fn -> %{} end)
 
+    args = Map.merge(args, %{checkpoint_agent: agent, report_dir: report_dir})
+
     children = [
-      {POC.SUP.Miner, %{checkpoint_agent: agent, input_path: "fake.dat", id: id}},
-      {POC.SUP.Receiver, %{checkpoint_agent: agent, id: id}}
+      {POC.SUP.Pipeline, args}
     ]
 
-    opts = [strategy: :one_for_one, name: POC.SUP.Supervisor]
+    opts = [strategy: :one_for_one, max_restarts: 1_000, name: POC.SUP.Supervisor]
     Supervisor.init(children, opts)
   end
 end
