@@ -1,0 +1,10 @@
+{"id":"poc-1661508357378","module":"POC.SUP.Miner","state":"up","time_microsecond":"0"}
+{"id":"poc-1661508357378","module":"POC.SUP.Receiver","state":"up","time_microsecond":"14124"}
+{"reason":":normal","id":"poc-1661508357378","module":"POC.SUP.Miner","state":"down","time_microsecond":"36351"}
+{"id":"poc-1661508357378","module":"POC.SUP.Miner","state":"up","time_microsecond":"36561"}
+{"reason":":normal","id":"poc-1661508357378","module":"POC.SUP.Receiver","state":"down","time_microsecond":"51737"}
+{"id":"poc-1661508357378","module":"POC.SUP.Receiver","state":"up","time_microsecond":"52388"}
+{"reason":":normal","id":"poc-1661508357378","module":"POC.SUP.Miner","state":"down","time_microsecond":"64394"}
+{"id":"poc-1661508357378","module":"POC.SUP.Miner","state":"up","time_microsecond":"64651"}
+{"reason":":normal","id":"poc-1661508357378","module":"POC.SUP.Receiver","state":"down","time_microsecond":"65019"}
+{"reason":":shutdown","id":"poc-1661508357378","module":"POC.SUP.Miner","state":"down","time_microsecond":"65424"}

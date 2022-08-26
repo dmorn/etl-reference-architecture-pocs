@@ -1,0 +1,10 @@
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"up","time_microsecond":"0"}
+{"id":"poc-1661508014392","module":"POC.SUP.Receiver","state":"up","time_microsecond":"18733"}
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"down","time_microsecond":"44948"}
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"up","time_microsecond":"45134"}
+{"id":"poc-1661508014392","module":"POC.SUP.Receiver","state":"down","time_microsecond":"62167"}
+{"id":"poc-1661508014392","module":"POC.SUP.Receiver","state":"up","time_microsecond":"63274"}
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"down","time_microsecond":"78575"}
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"up","time_microsecond":"79780"}
+{"id":"poc-1661508014392","module":"POC.SUP.Receiver","state":"down","time_microsecond":"80643"}
+{"id":"poc-1661508014392","module":"POC.SUP.Miner","state":"down","time_microsecond":"81199"}
