@@ -24,11 +24,11 @@ defmodule POC.BP.Miner do
       end)
 
     if length(packets) == 0 do
-      # GenStage.async_info(self(), {:terminate, :normal})
+      GenStage.async_info(self(), {:terminate, :normal})
       {:noreply, [], state}
+    else
+      {:noreply, packets, %{state | next: next + 1}}
     end
-
-    {:noreply, packets, %{state | next: next + 1}}
   end
 
   @impl true

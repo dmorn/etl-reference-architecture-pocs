@@ -1,4 +1,0 @@
-{"id":"poc-1661513456640","module":"POC.SUP.Miner","state":"up","time_microsecond":"0"}
-{"id":"poc-1661513456640","module":"POC.SUP.Receiver","state":"up","time_microsecond":"25622"}
-{"reason":":normal","id":"poc-1661513456640","module":"POC.SUP.Miner","state":"down","time_microsecond":"66465"}
-{"reason":":normal","id":"poc-1661513456640","module":"POC.SUP.Receiver","state":"down","time_microsecond":"71107"}
