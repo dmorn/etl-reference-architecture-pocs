@@ -18,7 +18,6 @@ defmodule Mix.Tasks.Benchmark do
     crash_prob = 0.1
     ref = make_ref()
 
-    # TODO: filter out lines we know contain errors.
     expected_count =
       input_path
       |> File.stream!()
