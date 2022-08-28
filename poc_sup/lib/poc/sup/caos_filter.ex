@@ -10,8 +10,8 @@ defmodule POC.SUP.CaosFilter do
     Process.flag(:trap_exit, true)
     POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{module: __MODULE__, id: id})
 
-    nope = List.duplicate(true, trunc(prob * 10))
-    yes = List.duplicate(false, trunc((1 - prob) * 10))
+    nope = List.duplicate(true, trunc(prob * 100))
+    yes = List.duplicate(false, trunc((1 - prob) * 100))
     space = Enum.concat(nope, yes)
 
     {:producer_consumer, %{id: id, crash_space: space}}

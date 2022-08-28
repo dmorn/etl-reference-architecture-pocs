@@ -9,15 +9,11 @@ defmodule POC.SUP.Telemetry do
     File.mkdir_p(dir)
 
     {:ok, state} =
-      @events
-      |> Enum.map(fn x ->
-        path = Path.join(dir, Atom.to_string(x) <> ".csv")
+      Agent.start_link(fn ->
+        path = Path.join(dir, "telemetry.jsonl")
         dev = File.open!(path, [:exclusive, :append])
-
-        {x, %{dev: dev, path: path}}
+        %{dev: dev, path: path}
       end)
-      |> Enum.into(%{})
-      |> then(&Agent.start_link(fn -> &1 end))
 
     Enum.each(@events, fn id ->
       :telemetry.detach(id)
@@ -54,6 +50,7 @@ defmodule POC.SUP.Telemetry do
 
   defp update_stage(state, data) do
     base = %{
+      "type" => "stage",
       "time_microsecond" =>
         Integer.to_string(:erlang.convert_time_unit(data.t - state.t0, :native, :microsecond)),
       "state" => Atom.to_string(data.state),
@@ -63,7 +60,15 @@ defmodule POC.SUP.Telemetry do
 
     payload =
       if data.state == :down do
-        Map.merge(base, %{reason: inspect(data.reason)})
+        reason =
+          case data.reason do
+            {:shutdown, :eof} -> "EOF"
+            {%RuntimeError{message: message}, _} -> message
+            {:bad_return_value, {:stop, {%RuntimeError{message: message}, _}}} -> message
+            other -> inspect(other)
+          end
+
+        Map.merge(base, %{reason: reason})
       else
         base
       end
@@ -72,8 +77,8 @@ defmodule POC.SUP.Telemetry do
     |> Jason.encode!()
     |> String.replace("\n", "", global: true)
     |> List.wrap()
-    |> Kernel.++(["\n"])
-    |> then(&IO.write(state.stage.dev, &1))
+    |> Kernel.++([",\n"])
+    |> then(&IO.write(state.dev, &1))
 
     state
   end
@@ -82,6 +87,7 @@ defmodule POC.SUP.Telemetry do
     state = Map.update(state, :sum, count, fn old -> old + count end)
 
     %{
+      "type" => "buffer",
       "time_microsecond" =>
         Integer.to_string(:erlang.convert_time_unit(t - state.t0, :native, :microsecond)),
       "sum" => Integer.to_string(state.sum),
@@ -90,8 +96,8 @@ defmodule POC.SUP.Telemetry do
     |> Jason.encode!()
     |> String.replace("\n", "", global: true)
     |> List.wrap()
-    |> Kernel.++(["\n"])
-    |> then(&IO.write(state.buffer.dev, &1))
+    |> Kernel.++([",\n"])
+    |> then(&IO.write(state.dev, &1))
 
     state
   end

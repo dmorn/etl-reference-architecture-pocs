@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Benchmark do
     end
 
     input_path = "fake.dat"
-    crash_prob = 0.1
+    crash_prob = 0.15
     ref = make_ref()
 
     expected_count =
@@ -23,7 +23,16 @@ defmodule Mix.Tasks.Benchmark do
       |> File.stream!()
       |> Enum.count()
 
-    opts = %{id: id, parent: self(), input_path: input_path, ref: ref, crash_prob: crash_prob}
+    opts = %{
+      id: id,
+      parent: self(),
+      input_path: input_path,
+      ref: ref,
+      crash_prob: crash_prob,
+      max_demand: 80,
+      min_demand: 40
+    }
+
     {:ok, pid} = POC.SUP.Supervisor.start_link(opts)
 
     %{report_dir: dir, seen_count: seen} =

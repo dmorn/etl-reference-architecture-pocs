@@ -13,8 +13,9 @@ defmodule POC.SUP.Pipeline do
     {:ok, b} = POC.SUP.CaosFilter.start_link(params)
     {:ok, c} = POC.SUP.Receiver.start_link(params)
 
-    GenStage.sync_subscribe(c, to: b, max_demand: 20, min_demand: 10)
-    GenStage.sync_subscribe(b, to: a, max_demand: 20, min_demand: 10)
+    GenStage.sync_subscribe(c, to: b, max_demand: params.max_demand, min_demand: params.min_demand)
+
+    GenStage.sync_subscribe(b, to: a, max_demand: params.max_demand, min_demand: params.min_demand)
 
     {:ok, [a, b, c]}
   end
