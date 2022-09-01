@@ -14,14 +14,46 @@ defmodule POC.SUP.CaosFilter do
     yes = List.duplicate(false, trunc((1 - prob) * 100))
     space = Enum.concat(nope, yes)
 
-    {:producer_consumer, %{id: id, crash_space: space}}
+    {:ok, sup} = Task.Supervisor.start_link()
+
+    {:producer_consumer, %{id: id, crash_space: space, sup: sup}}
   end
 
   @impl true
-  def handle_events(events, _from, state = %{crash_space: space}) do
+  def handle_events(events, _from, state = %{crash_space: space, sup: sup, id: id}) do
     if Enum.random(space) do
       raise "CAOS FILTER CRASH"
     end
+
+    events =
+      sup
+      |> Task.Supervisor.async_stream_nolink(
+        events,
+        fn x = %{sample: sample} ->
+          POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{
+            module: __MODULE__.Task,
+            id: id
+          })
+
+          %{x | sample: String.to_integer(sample) * 2}
+        end,
+        max_concurrency: 1,
+        ordered: true
+      )
+      |> Enum.flat_map(fn
+        {:ok, x} ->
+          [x]
+
+        {:exit, reason} ->
+          # TODO: shall we ask for more items to the producer?
+          POC.SUP.Telemetry.execute(:stage, %{state: :down}, %{
+            module: __MODULE__.Task,
+            id: id,
+            reason: reason
+          })
+
+          []
+      end)
 
     {:noreply, events, state}
   end

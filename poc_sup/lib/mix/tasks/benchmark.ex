@@ -14,13 +14,14 @@ defmodule Mix.Tasks.Benchmark do
       raise "provide an identifier when executing this task"
     end
 
-    input_path = "fake.dat"
-    crash_prob = 0.15
+    input_path = "num.short.dat"
+    crash_prob = 0.01
     ref = make_ref()
 
     expected_count =
       input_path
       |> File.stream!()
+      |> Stream.filter(fn x -> Integer.parse(x) != :error end)
       |> Enum.count()
 
     opts = %{
@@ -39,7 +40,7 @@ defmodule Mix.Tasks.Benchmark do
       receive do
         {:done, ^ref, data} -> data
       after
-        5_000 ->
+        15_000 ->
           raise "timeout reached on task #{inspect(ref)}, id #{inspect(id)}"
       end
 
