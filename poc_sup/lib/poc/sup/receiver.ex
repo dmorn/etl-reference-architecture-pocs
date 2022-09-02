@@ -6,9 +6,8 @@ defmodule POC.SUP.Receiver do
   end
 
   @impl true
-  def init(args = %{checkpoint_agent: agent, id: id}) do
+  def init(args = %{checkpoint_agent: agent}) do
     Process.flag(:trap_exit, true)
-    POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{module: __MODULE__, id: id})
 
     seen = Agent.get(agent, fn state -> state end)
     state = Map.merge(args, %{seen: seen})
@@ -34,8 +33,7 @@ defmodule POC.SUP.Receiver do
 
   @impl true
   def terminate(reason, state) do
-    %{checkpoint_agent: agent, seen: seen, parent: parent, report_dir: dir, ref: ref, id: id} =
-      state
+    %{checkpoint_agent: agent, seen: seen, parent: parent, ref: ref, id: id} = state
 
     Agent.update(agent, fn _state -> seen end)
 
@@ -50,8 +48,7 @@ defmodule POC.SUP.Receiver do
         parent,
         {:done, ref,
          %{
-           seen_count: map_size(seen),
-           report_dir: dir
+           seen_count: map_size(seen)
          }}
       )
     end

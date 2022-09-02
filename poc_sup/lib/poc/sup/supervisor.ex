@@ -7,13 +7,10 @@ defmodule POC.SUP.Supervisor do
 
   @impl true
   def init(args) do
-    %{id: id} = args
-    report_dir = Path.join(["report", id])
-
-    {:ok, _telemetry} = POC.SUP.Telemetry.init(%{base_dir: report_dir})
     {:ok, agent} = Agent.start_link(fn -> %{} end)
+    {:ok, crash_agent} = Agent.start_link(fn -> args.crash_points end)
 
-    args = Map.merge(args, %{checkpoint_agent: agent, report_dir: report_dir})
+    args = Map.merge(args, %{checkpoint_agent: agent, crash_agent: crash_agent})
 
     children = [
       {POC.SUP.Pipeline, args}

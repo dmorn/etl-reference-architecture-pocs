@@ -8,7 +8,6 @@ defmodule POC.SUP.Miner do
   @impl true
   def init(%{input_path: path, checkpoint_agent: agent, id: id}) do
     Process.flag(:trap_exit, true)
-    POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{module: __MODULE__, id: id})
 
     dev = File.open!(path, read_ahead: 5_000)
     checkpoint = Agent.get(agent, fn state -> state end)

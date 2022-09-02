@@ -13,24 +13,25 @@ defmodule POC.SUP.Pipeline do
     {:ok, b} = POC.SUP.CaosFilter.start_link(params)
     {:ok, c} = POC.SUP.Receiver.start_link(params)
 
-    GenStage.sync_subscribe(c, to: b, max_demand: params.max_demand, min_demand: params.min_demand)
+    %{max_demand: max, min_demand: min} = params
 
-    GenStage.sync_subscribe(b, to: a, max_demand: params.max_demand, min_demand: params.min_demand)
+    GenStage.sync_subscribe(c, to: b, max_demand: max, min_demand: min)
+    GenStage.sync_subscribe(b, to: a, max_demand: max, min_demand: min)
 
-    {:ok, [a, b, c]}
+    {:ok, %{children: [a, b, c], id: params.id}}
   end
 
   @impl true
-  def handle_info({:EXIT, from, {:shutdown, :eof}}, children) do
+  def handle_info({:EXIT, from, {:shutdown, :eof}}, state = %{children: children}) do
     children = Enum.filter(children, fn x -> x != from end)
 
     if children == [] do
       # when all children have exited, it is time for us too.
-      {:stop, {:shutdown, :eof}, []}
+      {:stop, {:shutdown, :eof}, %{state | children: []}}
     else
       # wait for the other exit messages to come, they are propagated from
       # miner to receiver caused by their subscription link.
-      {:noreply, children}
+      {:noreply, %{state | children: children}}
     end
   end
 

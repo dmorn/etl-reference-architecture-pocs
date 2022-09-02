@@ -1,40 +1,31 @@
 defmodule POC.SUP.CaosFilter do
   use GenStage, restart: :transient
 
-  def start_link(opts) do
-    GenStage.start_link(__MODULE__, opts, name: __MODULE__)
+  def start_link(%{crash_agent: agent, id: id}) do
+    next =
+      Agent.get_and_update(agent, fn
+        [] -> {nil, []}
+        [h | t] -> {h, t}
+      end)
+
+    GenStage.start_link(__MODULE__, %{id: id, crash_at: next}, name: __MODULE__)
   end
 
   @impl true
-  def init(%{id: id, crash_prob: prob}) when prob < 1 and prob >= 0 do
+  def init(%{id: id, crash_at: n}) do
     Process.flag(:trap_exit, true)
-    POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{module: __MODULE__, id: id})
-
-    nope = List.duplicate(true, trunc(prob * 100))
-    yes = List.duplicate(false, trunc((1 - prob) * 100))
-    space = Enum.concat(nope, yes)
 
     {:ok, sup} = Task.Supervisor.start_link()
-
-    {:producer_consumer, %{id: id, crash_space: space, sup: sup}}
+    {:producer_consumer, %{id: id, crash_at: n, sup: sup}}
   end
 
   @impl true
-  def handle_events(events, _from, state = %{crash_space: space, sup: sup, id: id}) do
-    if Enum.random(space) do
-      raise "CAOS FILTER CRASH"
-    end
-
+  def handle_events(events, _from, state = %{crash_at: crash, sup: sup, id: id}) do
     events =
       sup
       |> Task.Supervisor.async_stream_nolink(
         events,
         fn x = %{sample: sample} ->
-          POC.SUP.Telemetry.execute(:stage, %{state: :up}, %{
-            module: __MODULE__.Task,
-            id: id
-          })
-
           %{x | sample: String.to_integer(sample) * 2}
         end,
         max_concurrency: 1,
@@ -53,6 +44,13 @@ defmodule POC.SUP.CaosFilter do
           })
 
           []
+      end)
+      |> Enum.map(fn x = %{sample: sample} ->
+        if crash != nil && sample >= crash do
+          raise "CAOS FILTER CRASH"
+        end
+
+        x
       end)
 
     {:noreply, events, state}

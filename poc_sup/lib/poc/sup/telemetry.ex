@@ -1,7 +1,8 @@
 defmodule POC.SUP.Telemetry do
   @events [
     :buffer,
-    :stage
+    :stage,
+    :time
   ]
 
   def init(config = %{base_dir: dir}) do
@@ -31,11 +32,45 @@ defmodule POC.SUP.Telemetry do
     )
   end
 
+  def handle_telemetry_event([:time], %{state: :in, monotonic_time: t}, %{id: id}, agent) do
+    %{dev: dev} =
+      Agent.get_and_update(agent, fn state ->
+        state = Map.put_new(state, :t0, t)
+        {state, state}
+      end)
+
+    %{
+      "type" => "time-in",
+      "t0" => Integer.to_string(:erlang.convert_time_unit(t, :native, :microsecond)),
+      "id" => id
+    }
+    |> Jason.encode!()
+    |> String.replace("\n", "", global: true)
+    |> List.wrap()
+    |> Kernel.++([",\n"])
+    |> then(&IO.write(dev, &1))
+  end
+
   def handle_telemetry_event(event, measurement, meta, agent) do
     Agent.update(agent, fn state ->
-      state = Map.put_new(state, :t0, measurement.monotonic_time)
-
       case event do
+        [:time] ->
+          %{id: id} = meta
+          %{monotonic_time: t} = measurement
+          %{t0: t0, dev: dev} = state
+
+          %{
+            "type" => "time-out",
+            "duration_ms" =>
+              Integer.to_string(:erlang.convert_time_unit(t - t0, :native, :millisecond)),
+            "id" => id
+          }
+          |> Jason.encode!()
+          |> String.replace("\n", "", global: true)
+          |> List.wrap()
+          |> Kernel.++([",\n"])
+          |> then(&IO.write(dev, &1))
+
         [:stage] ->
           %{state: stage_state, monotonic_time: t} = measurement
           update_stage(state, Map.merge(meta, %{state: stage_state, t: t}))
